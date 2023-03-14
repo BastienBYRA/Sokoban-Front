@@ -2,22 +2,35 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import localhost from 'react-native-localhost';
 
 export default function Home({ navigation }) {
     const [board, setBoard] = useState(null);
+    const url = 'http://192.168.45.58:8000'
 
     useEffect(() => {
         getAllBoards();
     }, []);
 
     getAllBoards = async () => {
-        var json = JSON.parse('[{"id": 1,"name": "Simple board"}, {"id": 2,"name": "Simple board 2"}]')
-        // const response = await fetch('http://127.0.0.1:36987/board');
-        setBoard(json);
+        //METTRE SON IP
+        fetch(url + "/board")
+            .then((response) => response.json())
+            .then((data) => {
+                // Use the data from the server here
+                setBoard(data)
+
+            })
+            .catch((error) => {
+                // Handle any errors that occur
+                console.error(error);
+            });
+    
     }
 
   return (
     <View>
+    {/* <Text>{localhost}</Text> */}
         {board != null &&
             <FlatList
                 data={board}
@@ -31,7 +44,7 @@ export default function Home({ navigation }) {
                             margin: 1
                         }}>
                         <TouchableOpacity
-                        onPress={() => navigation.navigate('Board', {id: item.id})}
+                        onPress={() => navigation.navigate('Board', {id: item.id, nbCol: item.nbCol, nbRow: item.nbRow, url: url})}
                         >
                             <Text>
                                 {item.name}
@@ -41,7 +54,7 @@ export default function Home({ navigation }) {
                     </View>
                 )}
                 //Setting the number of column
-                numColumns={3}
+                numColumns={2}
                 keyExtractor={(item, index) => index.toString()}
                 />
         }
