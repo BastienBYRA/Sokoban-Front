@@ -5,6 +5,7 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 export default function Board(props) {
   const [board, setBoard] = useState(null);
 
+  //test
   useEffect(() => {
     console.log(props.route.params.url)
     getBoardGame();
