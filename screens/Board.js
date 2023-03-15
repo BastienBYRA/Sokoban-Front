@@ -6,15 +6,63 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function Board(props) {
   const [board, setBoard] = useState(null);
   const [baseBoard, setBaseBoard] = useState(null);
+  const [boardNoObject, setBoardNoObject] = useState(null);
+  const [boardOnlyObject, setBoardOnlyObject] = useState(null);
+  const [updateBoard, setUpdateBoard] = useState(0)
 
   useEffect(() => {
     // console.log(props.route.params.url)
     getBoardGame();
   }, []);
 
+  useEffect(() => {
+    setBoard(board)
+  }, updateBoard)
+
   function move(direction) {
-    
+
     console.log(direction)
+    
+    for (var line = 0; line < board.length; line++) {
+      for (var col = 0; col < board[0].length; col++) {
+        if(board[line][col] == "P") {
+
+          if(direction == "TOP") {
+            if(board[line-1][col] != "#") {
+              board[line-1][col] = "P"
+
+              if(baseBoard[line-1][col] != "P") {
+                board[line][col] = baseBoard[line-1][col]
+              }else{
+                board[line][col] = "."
+              }
+
+              setUpdateBoard(updateBoard + 1)
+            }
+          }else if(direction == "LEFT") {
+
+            if(board[line][col-1] != "#") {
+              board[line][col-1] = "P"
+
+              if(baseBoard[line][col-1] != "P") {
+                board[line][col] = baseBoard[line][col-1]
+              }else{
+                board[line][col] = "."
+              }
+
+              console.log(baseBoard)
+              console.log(board)
+
+              setUpdateBoard(updateBoard + 1)
+            }
+          }
+        }
+      }
+    }
+  }
+
+  function movementTop() {
+
   }
 
   getBoardGame = async () => {
@@ -22,14 +70,11 @@ export default function Board(props) {
       fetch(props.route.params.url + "/select?idBoard=" + props.route.params.id)
           .then((response) => response.json())
           .then((data) => {
-            // console.log(data)
-            data.map(function(row) {
-              // console.log(row)
-              // console.log(row[4])
-            })
-              // Use the data from the server here
-              setBoard(data)
-              // console.log(data)
+              // setBoard(data)
+              // setBaseBoard(data)
+
+              setBoard([...data])
+              setBaseBoard([...data])
           })
           .catch((error) => {
               // Handle any errors that occur
