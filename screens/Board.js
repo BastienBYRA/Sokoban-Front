@@ -1,24 +1,35 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Board(props) {
   const [board, setBoard] = useState(null);
+  const [baseBoard, setBaseBoard] = useState(null);
 
-  //test
   useEffect(() => {
-    console.log(props.route.params.url)
+    // console.log(props.route.params.url)
     getBoardGame();
   }, []);
+
+  function move(direction) {
+    
+    console.log(direction)
+  }
 
   getBoardGame = async () => {
       //METTRE SON IP
       fetch(props.route.params.url + "/select?idBoard=" + props.route.params.id)
           .then((response) => response.json())
           .then((data) => {
+            // console.log(data)
+            data.map(function(row) {
+              // console.log(row)
+              // console.log(row[4])
+            })
               // Use the data from the server here
               setBoard(data)
-              console.log(data)
+              // console.log(data)
           })
           .catch((error) => {
               // Handle any errors that occur
@@ -26,15 +37,14 @@ export default function Board(props) {
           });
   }
 
-  console.log(props.route.params)
   return (
+
     <View>
     {board != null &&
-      <Text>Test</Text>
-    }
-
-        {/* <FlatList
-          data={this.state.dataSource}
+    <View style={{borderColor: 'black', borderWidth: 1}}>
+      {board.map((row) => {
+        return (<FlatList
+          data={row}
           renderItem={({ item }) => (
             <View
               style={{
@@ -42,16 +52,44 @@ export default function Board(props) {
                 flexDirection: 'column',
                 margin: 1
               }}>
-              <Image
-                style={styles.imageThumbnail}
-                source={{ uri: item.src }}
-              />
+              <Text>{item}</Text>
             </View>
           )}
           //Setting the number of column
-          numColumns={3}
+          numColumns={props.route.params.nbCol}
           keyExtractor={(item, index) => index.toString()}
-        /> */}
+        />)
+      })}
+       </View>
+      }
+
+      <Button
+        onPress={() => move("TOP")}
+        title="TOP"
+        color="#841584"
+        accessibilityLabel="Learn more about this purple button"
+      />
+
+      <Button
+        onPress={() => move("LEFT")}
+        title="LEFT"
+        color="#841584"
+        accessibilityLabel="Learn more about this purple button"
+      />
+
+      <Button
+        onPress={() => move("RIGHT")}
+        title="RIGHT"
+        color="#841584"
+        accessibilityLabel="Learn more about this purple button"
+      />
+
+      <Button
+        onPress={() => move("BOTTOM")}
+        title="BOTTOM"
+        color="#841584"
+        accessibilityLabel="Learn more about this purple button"
+      />
     </View>
   );
 }

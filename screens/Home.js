@@ -2,11 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import localhost from 'react-native-localhost';
+// import localhost from 'react-native-localhost';
 
 export default function Home({ navigation }) {
     const [board, setBoard] = useState(null);
-    const url = 'http://192.168.45.58:8000'
+    const url = 'http://192.168.3.58:8000'
 
     useEffect(() => {
         getAllBoards();
