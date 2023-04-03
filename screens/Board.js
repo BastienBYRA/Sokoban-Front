@@ -1,6 +1,6 @@
 
 import {useEffect, useState} from 'react';
-import {Button, FlatList, Text, View} from 'react-native';
+import {Button, FlatList, Text, View, StyleSheet} from 'react-native';
 
 
 export default function Board(props) {
@@ -10,6 +10,7 @@ export default function Board(props) {
     // const [boardOnlyObject, setBoardOnlyObject] = useState(null);
     // const [updateBoard, setUpdateBoard] = useState(0)
     const [boardEachTurn, setBoardEachTurn] = useState(null);
+    const [completed, setCompleted] = useState(false);
 
     useEffect(() => {
         // console.log(props.route.params.url)
@@ -29,14 +30,6 @@ export default function Board(props) {
             for (let col = 0; col < board[0].length; col++) {
                 if (board[line][col] === "P") {
 
-                    // if(direction == "TOP")
-                    //   movementAction(line, col, -1, 0)
-                    // else if(direction == "BOTTOM")
-                    //   movementAction(line, col, 1, 0)
-                    // else if(direction == "LEFT")
-                    //   movementAction(line, col, 0, -1)
-                    // else
-                    //   movementAction(line, col, 0, 1)
 
                     if (direction === "TOP") {
                         movementAction(line, col, -1, 0)
@@ -49,42 +42,6 @@ export default function Board(props) {
                     }
 
                     return;
-
-                    // if(direction == "TOP") {
-                    //   if(board[line-1][col] != "#") {
-                    //     newBoard[line-1][col] = "P"
-
-                    //     if(baseBoard[line][col] != "P") {
-                    //       newBoard[line][col] = baseBoard[line][col]
-                    //     }else{
-                    //       newBoard[line][col] = "."
-                    //     }
-
-                    //     // setUpdateBoard(updateBoard + 1)
-                    //     setBoard(newBoard)
-                    //   }
-                    // }else if(direction == "LEFT") {
-
-                    //   // console.log(baseBoard)
-                    //   // console.log(line)
-                    //   // console.log(col)
-                    //   // console.log(baseBoard[line][col])
-
-                    //   if(board[line][col-1] != "#") {
-                    //     newBoard[line][col-1] = "P"
-
-                    //     if(baseBoard[line][col] != "P") {
-                    //       console.log("PASSE")
-                    //       newBoard[line][col] = baseBoard[line][col]
-                    //     }else{
-                    //       console.log("PASSE 2")
-                    //       newBoard[line][col] = "."
-                    //     }
-
-                    //     // setUpdateBoard(updateBoard + 1)
-                    //     setBoard(newBoard)
-                    //   }
-                    // }
                 }
             }
         }
@@ -133,13 +90,9 @@ export default function Board(props) {
                 }
             }
 
-
             save(newBoard)
-            // console.log(boardEachTurn.length)
 
-
-            // setUpdateBoard(updateBoard + 1)
-            // setBoard(newBoard)
+            checkGameIsComplete(newBoard)
         }
     }
 
@@ -201,9 +154,29 @@ export default function Board(props) {
 
     const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
+    const checkGameIsComplete = (board) => {
+        let isComplete = true;
+
+        for (let line = 0; line < board.length; line++) {
+            for (let col = 0; col < board[0].length; col++) {
+                if(baseBoard[line][col] == "x") {
+                    if(board[line][col] == "C") {
+                        //Continue
+                    }else{
+                        isComplete = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(isComplete == true) {
+            setCompleted(true);
+        }
+    }
+
 
     return (
-
         <View>
             {board != null &&
                 <View style={{borderColor: 'black', borderWidth: 1}}>
@@ -229,46 +202,68 @@ export default function Board(props) {
                 </View>
             }
 
-            <Button
-                onPress={() => move("TOP")}
-                title="TOP"
-                color="#841584"
-                accessibilityLabel="Learn more about this purple button"
-            />
+            {completed == false && 
+                <>
+                    <Button
+                        onPress={() => move("TOP")}
+                        title="TOP"
+                        color="#841584"
+                        accessibilityLabel="Learn more about this purple button"
+                    />
 
-            <Button
-                onPress={() => move("LEFT")}
-                title="LEFT"
-                color="#841584"
-                accessibilityLabel="Learn more about this purple button"
-            />
+                    <Button
+                        onPress={() => move("LEFT")}
+                        title="LEFT"
+                        color="#841584"
+                        accessibilityLabel="Learn more about this purple button"
+                    />
 
-            <Button
-                onPress={() => move("RIGHT")}
-                title="RIGHT"
-                color="#841584"
-                accessibilityLabel="Learn more about this purple button"
-            />
+                    <Button
+                        onPress={() => move("RIGHT")}
+                        title="RIGHT"
+                        color="#841584"
+                        accessibilityLabel="Learn more about this purple button"
+                    />
 
-            <Button
-                onPress={() => move("BOTTOM")}
-                title="BOTTOM"
-                color="#841584"
-                accessibilityLabel="Learn more about this purple button"
-            />
+                    <Button
+                        onPress={() => move("BOTTOM")}
+                        title="BOTTOM"
+                        color="#841584"
+                        accessibilityLabel="Learn more about this purple button"
+                    />
 
-            <Button
-                onPress={() => console.log(boardEachTurn.length)}
-                title="LOG NB TURN"
-                color="#841584"
-                accessibilityLabel="Learn more about this purple button"
-            />
-            <Button
-                onPress={() => precedentTurn()}
-                title="Retour"
-                color="#841584"
-                accessibilityLabel="Learn more about this purple button"
-            />
+                    <Button
+                        onPress={() => console.log(boardEachTurn.length)}
+                        title="LOG NB TURN"
+                        color="#841584"
+                        accessibilityLabel="Learn more about this purple button"
+                    />
+                    <Button
+                        onPress={() => precedentTurn()}
+                        title="Retour"
+                        color="#841584"
+                        accessibilityLabel="Learn more about this purple button"
+                    />
+                </>
+            }
+
+            {completed == true &&
+                <Text style={styles.completed}>REUSSI ! :D</Text>
+            }
+
+            
         </View>
     );
 }
+
+
+const styles = StyleSheet.create({
+    completed: {
+        // flex:1,
+        marginTop: 20,
+        textAlign: 'center',
+        // color: 'blue',
+        fontWeight: 'bold',
+        fontSize: 30,
+    }
+  })
