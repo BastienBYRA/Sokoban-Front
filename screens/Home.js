@@ -8,7 +8,7 @@ export default function Home({ navigation }) {
     const [board, setBoard] = useState(null);
     
     //Mettre SON IP ADDRESS sinon
-    const url = 'https://sokoban-back.herokuapp.com/board'
+    const url = 'https://sokoban-back.herokuapp.com'
 
     useEffect(() => {
         getAllBoards();
