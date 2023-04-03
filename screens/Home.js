@@ -5,7 +5,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export default function Home({navigation}) {
     const [board, setBoard] = useState(null);
-    const url = 'http://192.168.97.58:8000'
+    const url = 'https://sokoban-back.herokuapp.com'
     // const url = ''
 
     useEffect(() => {

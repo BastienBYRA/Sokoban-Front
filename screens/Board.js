@@ -7,9 +7,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function Board(props) {
     const [board, setBoard] = useState(null);
     const [baseBoard, setBaseBoard] = useState(null);
-    // const [boardNoObject, setBoardNoObject] = useState(null);
-    // const [boardOnlyObject, setBoardOnlyObject] = useState(null);
-    // const [updateBoard, setUpdateBoard] = useState(0)
     const [boardEachTurn, setBoardEachTurn] = useState(null);
     const [completed, setCompleted] = useState(false);
 
@@ -18,14 +15,7 @@ export default function Board(props) {
         getBoardGame();
     }, []);
 
-    // useEffect(() => {
-    //   console.log("---------------------------------------------------------------------------")
-    //   setBoard(board)
-    // }, updateBoard)
-
     function move(direction) {
-
-        // console.log(direction)
 
         for (let line = 0; line < board.length; line++) {
             for (let col = 0; col < board[0].length; col++) {
@@ -106,7 +96,6 @@ export default function Board(props) {
             let isequals = equals(newBoard, newBoardEachTurn[newBoardEachTurn.length - 1])
 
             if (isequals === false) {
-                console.log("DIFFERENT")
                 // console.log(newBoardEachTurn[newBoardEachTurn.length - 1])
                 newBoardEachTurn.push(newBoard);
                 // console.log(newBoardEachTurn[newBoardEachTurn.length - 1])
@@ -153,8 +142,6 @@ export default function Board(props) {
             });
     }
 
-    const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
-
     const checkGameIsComplete = (board) => {
         let isComplete = true;
 
@@ -177,74 +164,115 @@ export default function Board(props) {
     }
 
 
+    const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+    const buttonSize = 80; // Taille des boutons en pixels
+  
+  
     return (
-        <View>
-            {board != null &&
-                <View style={{borderColor: 'black', borderWidth: 1}}>
-                    {board.map((row, index) => {
-                        return (<FlatList
-                            key={row.toString + index}
-                            data={row}
-                            renderItem={({item}) => (
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        flexDirection: 'column',
-                                        margin: 1
-                                    }}>
-                                    <Text>{item}</Text>
-                                </View>
-                            )}
-                            //Setting the number of column
-                            numColumns={props.route.params.nbCol}
-                            keyExtractor={(item, index) => index.toString()}
-                        />)
-                    })}
-                </View>
-            }
+      <View>
+      {board != null &&
+      <View style={{borderColor: 'black', borderWidth: 1}}>
+        {board.map((row, index) => {
+          return (<FlatList
+          key={row.toString + index}
+            data={row}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'column',
+                  margin: 1
+                }}>
+                {/* <Text>{item}</Text> */}
+                {item === 'C' && (
+                  <Image
+                  style={{ width: 30, height: 30 }}
+                    source={require('../assets/image/board/caisse.png')}/>)
+                }
+                {item === '#' && (
+                  <Image
+                  style={{ width: 30, height: 30 }}
+                    source={require('../assets/image/board/mur.png')}/>)
+                }
+                {item === '.' && (
+                  <Image
+                  style={{ width: 30, height: 30 }}
+                    source={require('../assets/image/board/sol.png')}/>)
+                }
+                {item === 'x' && (
+                  <Image
+                  style={{ width: 30, height: 30 }}
+                    source={require('../assets/image/board/croix.jpg')}/>)
+                }
+                {item === 'P' && (
+                  <Image
+                  style={{ width: 30, height: 30 }}
+                    source={require('../assets/image/board/personnage.jpg')}/>)
+                }
+                  
+              </View>
+            )}
+            //Setting the number of column
+            numColumns={props.route.params.nbCol}
+            keyExtractor={(item, index) => index.toString()}
+          />)
+        })}
+         </View>
+        }
+  
+        
 
             {completed == false && 
                 <>
-                    <Button
-                        onPress={() => move("TOP")}
-                        title="TOP"
-                        color="#841584"
-                        accessibilityLabel="Learn more about this purple button"
-                    />
-
-                    <Button
-                        onPress={() => move("LEFT")}
-                        title="LEFT"
-                        color="#841584"
-                        accessibilityLabel="Learn more about this purple button"
-                    />
-
-                    <Button
-                        onPress={() => move("RIGHT")}
-                        title="RIGHT"
-                        color="#841584"
-                        accessibilityLabel="Learn more about this purple button"
-                    />
-
-                    <Button
-                        onPress={() => move("BOTTOM")}
-                        title="BOTTOM"
-                        color="#841584"
-                        accessibilityLabel="Learn more about this purple button"
-                    />
-
-                    <Button
-                        onPress={() => console.log(boardEachTurn.length)}
-                        title="LOG NB TURN"
-                        color="#841584"
-                        accessibilityLabel="Learn more about this purple button"
-                    />
-                    <Button
-                        onPress={() => precedentTurn()}
-                        title="Retour"
-                        color="#841584"
-                        accessibilityLabel="Learn more about this purple button"
-                    />
+                <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ width: buttonSize, height: buttonSize }}>
+              <Button
+                onPress={() => move("TOP")}
+                title="TOP"
+                color="#841584"
+                accessibilityLabel="Learn more about this purple button"
+              />
+          </View>
+        </View>
+  
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ width: buttonSize, height: buttonSize }}>
+            <Button
+              onPress={() => move("LEFT")}
+              title="LEFT"
+              color="#841584"
+              accessibilityLabel="Learn more about this purple button"
+            />
+          </View>
+          <View style={{ width: buttonSize, height: buttonSize }}>
+            <Button
+              onPress={() => move("RIGHT")}
+              title="RIGHT"
+              color="#841584"
+              accessibilityLabel="Learn more about this purple button"
+            />
+          </View>
+        </View>
+  
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ width: buttonSize, height: buttonSize }}>
+            <Button
+              onPress={() => move("BOTTOM")}
+              title="BOTTOM"
+              color="#841584"
+              accessibilityLabel="Learn more about this purple button"
+            />
+          </View>
+        </View>
+      </View>
+  
+        <Button
+          onPress={() => precedentTurn()}
+          title="Retour"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
                 </>
             }
 
@@ -268,154 +296,4 @@ const styles = StyleSheet.create({
         fontSize: 30,
     }
   }
-
-  function precedentTurn() {
-    console.log(boardEachTurn.length)
-    if(boardEachTurn.length > 1) {
-
-      var newBoardEachTurn = boardEachTurn;
-      newBoardEachTurn.pop();
-      // console.log(newBoardEachTurn)
-      setBoardEachTurn(newBoardEachTurn)
-      // console.log(newBoardEachTurn.slice(-1)[0])
-      setBoard(newBoardEachTurn.slice(-1)[0]);
-    }
-  }
-
-  getBoardGame = async () => {
-      //METTRE SON IP
-      fetch(props.route.params.url + "/select?idBoard=" + props.route.params.id)
-          .then((response) => response.json())
-          .then((data) => {
-              // setBoard(data)
-              // setBaseBoard(data)
-
-              const boardCopy = JSON.parse(JSON.stringify(data))
-              const baseBoardCopy = JSON.parse(JSON.stringify(data))
-              const boardEachTurnCopy = JSON.parse(JSON.stringify(data))
-              setBoard(boardCopy)
-              setBaseBoard(baseBoardCopy)
-              setBoardEachTurn([boardEachTurnCopy])
-
-
-          })
-          .catch((error) => {
-              // Handle any errors that occur
-              console.error(error);
-          });
-  }
-
-  const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
-  const buttonSize = 80; // Taille des boutons en pixels
-
-
-  return (
-    <View>
-    {board != null &&
-    <View style={{borderColor: 'black', borderWidth: 1}}>
-      {board.map((row, index) => {
-        return (<FlatList
-        key={row.toString + index}
-          data={row}
-          renderItem={({ item }) => (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'column',
-                margin: 1
-              }}>
-              {/* <Text>{item}</Text> */}
-              {item === 'C' && (
-                <Image
-                style={{ width: 30, height: 30 }}
-                  source={require('../assets/image/board/caisse.png')}/>)
-              }
-              {item === '#' && (
-                <Image
-                style={{ width: 30, height: 30 }}
-                  source={require('../assets/image/board/mur.png')}/>)
-              }
-              {item === '.' && (
-                <Image
-                style={{ width: 30, height: 30 }}
-                  source={require('../assets/image/board/sol.png')}/>)
-              }
-              {item === 'x' && (
-                <Image
-                style={{ width: 30, height: 30 }}
-                  source={require('../assets/image/board/croix.jpg')}/>)
-              }
-              {item === 'P' && (
-                <Image
-                style={{ width: 30, height: 30 }}
-                  source={require('../assets/image/board/personnage.jpg')}/>)
-              }
-                
-            </View>
-          )}
-          //Setting the number of column
-          numColumns={props.route.params.nbCol}
-          keyExtractor={(item, index) => index.toString()}
-        />)
-      })}
-       </View>
-      }
-
-      <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ width: buttonSize, height: buttonSize }}>
-            <Button
-              onPress={() => move("TOP")}
-              title="TOP"
-              color="#841584"
-              accessibilityLabel="Learn more about this purple button"
-            />
-        </View>
-      </View>
-
-      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-        <View style={{ width: buttonSize, height: buttonSize }}>
-          <Button
-            onPress={() => move("LEFT")}
-            title="LEFT"
-            color="#841584"
-            accessibilityLabel="Learn more about this purple button"
-          />
-        </View>
-        <View style={{ width: buttonSize, height: buttonSize }}>
-          <Button
-            onPress={() => move("RIGHT")}
-            title="RIGHT"
-            color="#841584"
-            accessibilityLabel="Learn more about this purple button"
-          />
-        </View>
-      </View>
-
-      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-        <View style={{ width: buttonSize, height: buttonSize }}>
-          <Button
-            onPress={() => move("BOTTOM")}
-            title="BOTTOM"
-            color="#841584"
-            accessibilityLabel="Learn more about this purple button"
-          />
-        </View>
-      </View>
-    </View>
-
-      <Button
-        onPress={() => console.log(boardEachTurn.length)}
-        title="LOG NB TURN"
-        color="#841584"
-        accessibilityLabel="Learn more about this purple button"
-      />
-      <Button
-        onPress={() => precedentTurn()}
-        title="Retour"
-        color="#841584"
-        accessibilityLabel="Learn more about this purple button"
-      />
-    </View>
   );
-}
