@@ -172,6 +172,7 @@ export default function Board(props) {
       <View>
       {board != null &&
       <View style={{borderColor: 'black', borderWidth: 1}}>
+      {boardEachTurn != null && <Text>Nombre de tour : {boardEachTurn.length}</Text>}
         {board.map((row, index) => {
           return (<FlatList
           key={row.toString + index}
