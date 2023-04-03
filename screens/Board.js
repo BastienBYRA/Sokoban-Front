@@ -23,7 +23,7 @@ export default function Board(props) {
 
   function move(direction) {
 
-    console.log(direction)
+    // console.log(direction)
 
     for (var line = 0; line < board.length; line++) {
       for (var col = 0; col < board[0].length; col++) {
@@ -94,48 +94,51 @@ export default function Board(props) {
   }
 
   function movementAction(line, col, lineDirection, colDirection) {
-    var newBoard = [...board];
-    
-    if(board[line+lineDirection][col+colDirection] != "#") {
-      // newBoard[line+lineDirection][col+colDirection] = "P"
+    console.log(boardEachTurn[boardEachTurn.length - 1])
+    var newBoard = JSON.parse(JSON.stringify(board));
 
-      // if(baseBoard[line][col] != "P") {
-      //   newBoard[line][col] = baseBoard[line][col]
-      // }else{
-      //   newBoard[line][col] = "."
-      // }
+    if(board[line+lineDirection][col+colDirection] != "#") {
 
       if(newBoard[line+lineDirection][col+colDirection] == "C") {
         
+        // console.log("CASE 1")
         if(newBoard[line+lineDirection+lineDirection][col+colDirection+colDirection] != "C" && newBoard[line+lineDirection+lineDirection][col+colDirection+colDirection] != "#") {
           
+          // console.log("CASE 2")
+
           newBoard[line+lineDirection+lineDirection][col+colDirection+colDirection] = "C"
           newBoard[line+lineDirection][col+colDirection] = "P"
 
-          if(baseBoard[line][col] != "P") {
+          if(baseBoard[line][col] != "P" && baseBoard[line][col] != "C") {
+            // console.log("CASE 3")
             newBoard[line][col] = baseBoard[line][col]
           }else{
+            // console.log("CASE 4")
             newBoard[line][col] = "."
           }
 
         }else{
           //Deplacement impossible
           newBoard[line][col] = "P"
+          // console.log("CASE 5")
         }
       }else{
         newBoard[line+lineDirection][col+colDirection] = "P"
-
-        console.log(line)
-        console.log(col)
-
-        if(baseBoard[line][col] != "P") {
+        // console.log("CASE 6")
+        if(baseBoard[line][col] != "P" && baseBoard[line][col] != "C") {
+          // console.log("CASE 7")
+          console.log(boardEachTurn[boardEachTurn.length - 1])
           newBoard[line][col] = baseBoard[line][col]
+          console.log(boardEachTurn[boardEachTurn.length - 1])
         }else{
+          // console.log("CASE 8")
           newBoard[line][col] = "."
         }
       }
 
+
       save(newBoard)
+      // console.log(boardEachTurn.length)
 
 
 
@@ -147,18 +150,34 @@ export default function Board(props) {
   function save(newBoard) {
     setBoard(newBoard)
 
-    var newBoardEachTurn = boardEachTurn;
-    // console.log(newBoardEachTurn)
-    newBoardEachTurn.push(newBoard);
+    var newBoardEachTurn = JSON.parse(JSON.stringify(boardEachTurn));
 
     if(boardEachTurn.length > 0) {
-      if(newBoard != boardEachTurn[boardEachTurn.length - 1])
-      
-        setBoardEachTurn(newBoardEachTurn)
-    }else{
-      setBoardEachTurn(newBoardEachTurn)
-    }
+      var isequals = equals(newBoard, newBoardEachTurn[newBoardEachTurn.length - 1])
 
+      if(isequals === false) {
+        console.log("DIFFERENT")
+        // console.log(newBoardEachTurn[newBoardEachTurn.length - 1])
+        newBoardEachTurn.push(newBoard);
+        // console.log(newBoardEachTurn[newBoardEachTurn.length - 1])
+        setBoardEachTurn(newBoardEachTurn)
+      }else{
+        console.log("EQUALSSSSS")
+      }
+    }
+  }
+
+  function precedentTurn() {
+    console.log(boardEachTurn.length)
+    if(boardEachTurn.length > 1) {
+
+      var newBoardEachTurn = boardEachTurn;
+      newBoardEachTurn.pop();
+      // console.log(newBoardEachTurn)
+      setBoardEachTurn(newBoardEachTurn)
+      // console.log(newBoardEachTurn.slice(-1)[0])
+      setBoard(newBoardEachTurn.slice(-1)[0]);
+    }
   }
 
   getBoardGame = async () => {
@@ -183,6 +202,10 @@ export default function Board(props) {
               console.error(error);
           });
   }
+
+  const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+
 
   return (
 
@@ -242,6 +265,12 @@ export default function Board(props) {
       <Button
         onPress={() => console.log(boardEachTurn.length)}
         title="LOG NB TURN"
+        color="#841584"
+        accessibilityLabel="Learn more about this purple button"
+      />
+      <Button
+        onPress={() => precedentTurn()}
+        title="Retour"
         color="#841584"
         accessibilityLabel="Learn more about this purple button"
       />

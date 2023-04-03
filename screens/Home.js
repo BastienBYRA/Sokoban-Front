@@ -6,8 +6,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function Home({ navigation }) {
     const [board, setBoard] = useState(null);
-    //Mettre SON IP ADDRESS
-    const url = 'http://192.168.160.58:8000'
+    
+    //Mettre SON IP ADDRESS sinon
+    const url = 'https://sokoban-back.herokuapp.com/board'
 
     useEffect(() => {
         getAllBoards();
