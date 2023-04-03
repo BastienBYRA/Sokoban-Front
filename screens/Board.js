@@ -11,10 +11,15 @@ export default function Board(props) {
     const [completed, setCompleted] = useState(false);
 
     useEffect(() => {
-        // console.log(props.route.params.url)
         getBoardGame();
     }, []);
 
+    /**
+     * Traverse le board et chercher l'emplacement du Joueur
+     * Effectue le mouvement choisis.
+     * @param {string} direction 
+     * @returns 
+     */
     function move(direction) {
 
         for (let line = 0; line < board.length; line++) {
@@ -38,55 +43,62 @@ export default function Board(props) {
         }
     }
 
+    /**
+     * Change la position du Joueur en fonction de la position desiré.
+     * Verifie si l'utilisateur peut réaliser le mouvement, et les caisses qu'il bouge.
+     * @param {integer} line 
+     * @param {integer} col 
+     * @param {integer} lineDirection 
+     * @param {integer} colDirection 
+     */
     function movementAction(line, col, lineDirection, colDirection) {
-        console.log(boardEachTurn[boardEachTurn.length - 1])
+
+        //Copie le BOARD sans prendre sa référence.
         let newBoard = JSON.parse(JSON.stringify(board));
 
+        //Si la case sur laquelle veut se déplacer l'utilisateur n'est pas un mur
         if (board[line + lineDirection][col + colDirection] !== "#") {
 
+            //Verifie s'il y a une caisse ou non
             if (newBoard[line + lineDirection][col + colDirection] === "C") {
 
-                // console.log("CASE 1")
+                // Verifie que en face de la direction de la caisse ne se trouve pas une autre caisse ou un mur
                 if (newBoard[line + lineDirection + lineDirection][col + colDirection + colDirection] !== "C" && newBoard[line + lineDirection + lineDirection][col + colDirection + colDirection] !== "#") {
 
-                    // console.log("CASE 2")
-
+                    //Si pas d'autre caisse / mur, avance le joueur et la caisse
                     newBoard[line + lineDirection + lineDirection][col + colDirection + colDirection] = "C"
                     newBoard[line + lineDirection][col + colDirection] = "P"
 
                     if (baseBoard[line][col] !== "P" && baseBoard[line][col] !== "C") {
-                        // console.log("CASE 3")
                         newBoard[line][col] = baseBoard[line][col]
                     } else {
-                        // console.log("CASE 4")
                         newBoard[line][col] = "."
                     }
-
                 } else {
                     //Deplacement impossible
                     newBoard[line][col] = "P"
-                    // console.log("CASE 5")
                 }
+
+            //Si l'utilisateur se déplace, et qu'il n'y a pas de caisse en face de lui.
             } else {
                 newBoard[line + lineDirection][col + colDirection] = "P"
-                // console.log("CASE 6")
+
                 if (baseBoard[line][col] !== "P" && baseBoard[line][col] !== "C") {
-                    // console.log("CASE 7")
-                    console.log(boardEachTurn[boardEachTurn.length - 1])
                     newBoard[line][col] = baseBoard[line][col]
-                    console.log(boardEachTurn[boardEachTurn.length - 1])
                 } else {
-                    // console.log("CASE 8")
                     newBoard[line][col] = "."
                 }
             }
 
             save(newBoard)
-
             checkGameIsComplete(newBoard)
         }
     }
 
+    /**
+     * Sauvegarde le Board, et l'ajoute a la liste des Boards permettant de revenir un tour en arrière.
+     * @param {Array[Array[]]} newBoard 
+     */
     function save(newBoard) {
         setBoard(newBoard)
 
@@ -95,45 +107,41 @@ export default function Board(props) {
         if (boardEachTurn.length > 0) {
             let isequals = equals(newBoard, newBoardEachTurn[newBoardEachTurn.length - 1])
 
+            //Si le board de se tour est DIFFERENT de celui du précédent tour, on l'enregistre.
             if (isequals === false) {
-                // console.log(newBoardEachTurn[newBoardEachTurn.length - 1])
                 newBoardEachTurn.push(newBoard);
-                // console.log(newBoardEachTurn[newBoardEachTurn.length - 1])
                 setBoardEachTurn(newBoardEachTurn)
-            } else {
-                console.log("EQUALSSSSS")
             }
         }
     }
 
+    /**
+     * Réalise un retour en arrière
+     */
     function precedentTurn() {
-        console.log(boardEachTurn.length)
         if (boardEachTurn.length > 1) {
-
             let newBoardEachTurn = boardEachTurn;
             newBoardEachTurn.pop();
-            // console.log(newBoardEachTurn)
             setBoardEachTurn(newBoardEachTurn)
-            // console.log(newBoardEachTurn.slice(-1)[0])
             setBoard(newBoardEachTurn.slice(-1)[0]);
         }
     }
 
     const getBoardGame = async () => {
-        //METTRE SON IP
+
         fetch(props.route.params.url + "/select?idBoard=" + props.route.params.id)
             .then((response) => response.json())
             .then((data) => {
-                // setBoard(data)
-                // setBaseBoard(data)
 
+                //Récupère les données, sans prendre leur références
+                //POUR EVITER QUE QUAND ON MODIFIE UN BOARD, IL MODIFIE LES AUTRES
+                //Pourquoi [...data] ne résoud pas le probleme de référence ? Je ne sais pas...
                 const boardCopy = JSON.parse(JSON.stringify(data))
                 const baseBoardCopy = JSON.parse(JSON.stringify(data))
                 const boardEachTurnCopy = JSON.parse(JSON.stringify(data))
                 setBoard(boardCopy)
                 setBaseBoard(baseBoardCopy)
                 setBoardEachTurn([boardEachTurnCopy])
-
 
             })
             .catch((error) => {
@@ -142,11 +150,17 @@ export default function Board(props) {
             });
     }
 
+    /**
+     * Verifie à la fin de chaque tour si les cases "x" du tableau de base sont des "C" dans le tableau de jeu en cours
+     * @param {Array[Array[]]} board 
+     */
     const checkGameIsComplete = (board) => {
         let isComplete = true;
 
         for (let line = 0; line < board.length; line++) {
             for (let col = 0; col < board[0].length; col++) {
+
+                //Si case "x", vérifie s'il y a une caisse ou non dans le board du jeu en cours.
                 if(baseBoard[line][col] == "x") {
                     if(board[line][col] == "C") {
                         //Continue
@@ -163,10 +177,8 @@ export default function Board(props) {
         }
     }
 
-
     const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     const buttonSize = 80; // Taille des boutons en pixels
-  
   
     return (
       <View>

@@ -12,6 +12,7 @@ export default function Home({navigation}) {
         getAllBoards();
     }, []);
 
+    //Récupère la liste des boards disponibles
     const getAllBoards = async () => {
         //METTRE SON IP
         fetch(url + "/board")
