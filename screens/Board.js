@@ -1,4 +1,3 @@
-
 import {useEffect, useState} from 'react';
 import {Button, FlatList, Text, View} from 'react-native';
 
@@ -6,37 +5,16 @@ import {Button, FlatList, Text, View} from 'react-native';
 export default function Board(props) {
     const [board, setBoard] = useState(null);
     const [baseBoard, setBaseBoard] = useState(null);
-    // const [boardNoObject, setBoardNoObject] = useState(null);
-    // const [boardOnlyObject, setBoardOnlyObject] = useState(null);
-    // const [updateBoard, setUpdateBoard] = useState(0)
     const [boardEachTurn, setBoardEachTurn] = useState(null);
 
     useEffect(() => {
-        // console.log(props.route.params.url)
         getBoardGame();
     }, []);
 
-    // useEffect(() => {
-    //   console.log("---------------------------------------------------------------------------")
-    //   setBoard(board)
-    // }, updateBoard)
-
     function move(direction) {
-
-        // console.log(direction)
-
         for (let line = 0; line < board.length; line++) {
             for (let col = 0; col < board[0].length; col++) {
                 if (board[line][col] === "P") {
-
-                    // if(direction == "TOP")
-                    //   movementAction(line, col, -1, 0)
-                    // else if(direction == "BOTTOM")
-                    //   movementAction(line, col, 1, 0)
-                    // else if(direction == "LEFT")
-                    //   movementAction(line, col, 0, -1)
-                    // else
-                    //   movementAction(line, col, 0, 1)
 
                     if (direction === "TOP") {
                         movementAction(line, col, -1, 0)
@@ -47,44 +25,7 @@ export default function Board(props) {
                     } else {
                         movementAction(line, col, 0, 1)
                     }
-
                     return;
-
-                    // if(direction == "TOP") {
-                    //   if(board[line-1][col] != "#") {
-                    //     newBoard[line-1][col] = "P"
-
-                    //     if(baseBoard[line][col] != "P") {
-                    //       newBoard[line][col] = baseBoard[line][col]
-                    //     }else{
-                    //       newBoard[line][col] = "."
-                    //     }
-
-                    //     // setUpdateBoard(updateBoard + 1)
-                    //     setBoard(newBoard)
-                    //   }
-                    // }else if(direction == "LEFT") {
-
-                    //   // console.log(baseBoard)
-                    //   // console.log(line)
-                    //   // console.log(col)
-                    //   // console.log(baseBoard[line][col])
-
-                    //   if(board[line][col-1] != "#") {
-                    //     newBoard[line][col-1] = "P"
-
-                    //     if(baseBoard[line][col] != "P") {
-                    //       console.log("PASSE")
-                    //       newBoard[line][col] = baseBoard[line][col]
-                    //     }else{
-                    //       console.log("PASSE 2")
-                    //       newBoard[line][col] = "."
-                    //     }
-
-                    //     // setUpdateBoard(updateBoard + 1)
-                    //     setBoard(newBoard)
-                    //   }
-                    // }
                 }
             }
         }
@@ -98,48 +39,32 @@ export default function Board(props) {
 
             if (newBoard[line + lineDirection][col + colDirection] === "C") {
 
-                // console.log("CASE 1")
                 if (newBoard[line + lineDirection + lineDirection][col + colDirection + colDirection] !== "C" && newBoard[line + lineDirection + lineDirection][col + colDirection + colDirection] !== "#") {
-
-                    // console.log("CASE 2")
 
                     newBoard[line + lineDirection + lineDirection][col + colDirection + colDirection] = "C"
                     newBoard[line + lineDirection][col + colDirection] = "P"
 
                     if (baseBoard[line][col] !== "P" && baseBoard[line][col] !== "C") {
-                        // console.log("CASE 3")
                         newBoard[line][col] = baseBoard[line][col]
                     } else {
-                        // console.log("CASE 4")
                         newBoard[line][col] = "."
                     }
 
                 } else {
                     //Deplacement impossible
                     newBoard[line][col] = "P"
-                    // console.log("CASE 5")
                 }
             } else {
                 newBoard[line + lineDirection][col + colDirection] = "P"
-                // console.log("CASE 6")
                 if (baseBoard[line][col] !== "P" && baseBoard[line][col] !== "C") {
-                    // console.log("CASE 7")
                     console.log(boardEachTurn[boardEachTurn.length - 1])
                     newBoard[line][col] = baseBoard[line][col]
                     console.log(boardEachTurn[boardEachTurn.length - 1])
                 } else {
-                    // console.log("CASE 8")
                     newBoard[line][col] = "."
                 }
             }
-
-
             save(newBoard)
-            // console.log(boardEachTurn.length)
-
-
-            // setUpdateBoard(updateBoard + 1)
-            // setBoard(newBoard)
         }
     }
 
@@ -153,9 +78,7 @@ export default function Board(props) {
 
             if (isequals === false) {
                 console.log("DIFFERENT")
-                // console.log(newBoardEachTurn[newBoardEachTurn.length - 1])
                 newBoardEachTurn.push(newBoard);
-                // console.log(newBoardEachTurn[newBoardEachTurn.length - 1])
                 setBoardEachTurn(newBoardEachTurn)
             } else {
                 console.log("EQUALSSSSS")
@@ -169,9 +92,7 @@ export default function Board(props) {
 
             let newBoardEachTurn = boardEachTurn;
             newBoardEachTurn.pop();
-            // console.log(newBoardEachTurn)
             setBoardEachTurn(newBoardEachTurn)
-            // console.log(newBoardEachTurn.slice(-1)[0])
             setBoard(newBoardEachTurn.slice(-1)[0]);
         }
     }
@@ -181,17 +102,12 @@ export default function Board(props) {
         fetch(props.route.params.url + "/select?idBoard=" + props.route.params.id)
             .then((response) => response.json())
             .then((data) => {
-                // setBoard(data)
-                // setBaseBoard(data)
-
                 const boardCopy = JSON.parse(JSON.stringify(data))
                 const baseBoardCopy = JSON.parse(JSON.stringify(data))
                 const boardEachTurnCopy = JSON.parse(JSON.stringify(data))
                 setBoard(boardCopy)
                 setBaseBoard(baseBoardCopy)
                 setBoardEachTurn([boardEachTurnCopy])
-
-
             })
             .catch((error) => {
                 // Handle any errors that occur

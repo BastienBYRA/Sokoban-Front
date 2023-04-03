@@ -51,6 +51,13 @@ export default function Home({navigation}) {
                                     {item.name}
                                 </Text>
                             </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('Admin')}
+                            >
+                                <Text>
+                                    Créer un niveau
+                                </Text>
+                            </TouchableOpacity>
 
                         </View>
                     )}
