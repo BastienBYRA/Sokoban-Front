@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
+import { Button, FlatList, StyleSheet, Text, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Board(props) {
@@ -204,7 +204,7 @@ export default function Board(props) {
   }
 
   const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
-
+  const buttonSize = 80; // Taille des boutons en pixels
 
 
   return (
@@ -223,7 +223,33 @@ export default function Board(props) {
                 flexDirection: 'column',
                 margin: 1
               }}>
-              <Text>{item}</Text>
+              {/* <Text>{item}</Text> */}
+              {item === 'C' && (
+                <Image
+                style={{ width: 30, height: 30 }}
+                  source={require('../assets/image/board/caisse.png')}/>)
+              }
+              {item === '#' && (
+                <Image
+                style={{ width: 30, height: 30 }}
+                  source={require('../assets/image/board/mur.png')}/>)
+              }
+              {item === '.' && (
+                <Image
+                style={{ width: 30, height: 30 }}
+                  source={require('../assets/image/board/sol.png')}/>)
+              }
+              {item === 'x' && (
+                <Image
+                style={{ width: 30, height: 30 }}
+                  source={require('../assets/image/board/croix.jpg')}/>)
+              }
+              {item === 'P' && (
+                <Image
+                style={{ width: 30, height: 30 }}
+                  source={require('../assets/image/board/personnage.jpg')}/>)
+              }
+                
             </View>
           )}
           //Setting the number of column
@@ -234,33 +260,48 @@ export default function Board(props) {
        </View>
       }
 
-      <Button
-        onPress={() => move("TOP")}
-        title="TOP"
-        color="#841584"
-        accessibilityLabel="Learn more about this purple button"
-      />
+      <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ width: buttonSize, height: buttonSize }}>
+            <Button
+              onPress={() => move("TOP")}
+              title="TOP"
+              color="#841584"
+              accessibilityLabel="Learn more about this purple button"
+            />
+        </View>
+      </View>
 
-      <Button
-        onPress={() => move("LEFT")}
-        title="LEFT"
-        color="#841584"
-        accessibilityLabel="Learn more about this purple button"
-      />
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ width: buttonSize, height: buttonSize }}>
+          <Button
+            onPress={() => move("LEFT")}
+            title="LEFT"
+            color="#841584"
+            accessibilityLabel="Learn more about this purple button"
+          />
+        </View>
+        <View style={{ width: buttonSize, height: buttonSize }}>
+          <Button
+            onPress={() => move("RIGHT")}
+            title="RIGHT"
+            color="#841584"
+            accessibilityLabel="Learn more about this purple button"
+          />
+        </View>
+      </View>
 
-      <Button
-        onPress={() => move("RIGHT")}
-        title="RIGHT"
-        color="#841584"
-        accessibilityLabel="Learn more about this purple button"
-      />
-
-      <Button
-        onPress={() => move("BOTTOM")}
-        title="BOTTOM"
-        color="#841584"
-        accessibilityLabel="Learn more about this purple button"
-      />
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ width: buttonSize, height: buttonSize }}>
+          <Button
+            onPress={() => move("BOTTOM")}
+            title="BOTTOM"
+            color="#841584"
+            accessibilityLabel="Learn more about this purple button"
+          />
+        </View>
+      </View>
+    </View>
 
       <Button
         onPress={() => console.log(boardEachTurn.length)}
