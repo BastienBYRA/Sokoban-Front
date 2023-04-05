@@ -1,7 +1,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { Button, FlatList, StyleSheet, Text, View, Image } from 'react-native';
+import { Button, FlatList, StyleSheet, Text, View, Image, Dimensions  } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Board(props) {
@@ -179,81 +179,76 @@ export default function Board(props) {
 
     const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     const buttonSize = 80; // Taille des boutons en pixels
-  
-    return (
-      <View>
-      {board != null &&
-      <View style={{borderColor: 'black', borderWidth: 1}}>
-      {boardEachTurn != null && <Text>Nombre de tour : {boardEachTurn.length}</Text>}
-        {board.map((row, index) => {
-          return (<FlatList
-          key={row.toString + index}
-            data={row}
-            renderItem={({ item }) => (
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'column',
-                  margin: 1
-                }}>
-                {/* <Text>{item}</Text> */}
-                {item === 'C' && (
-                  <Image
-                  style={{ width: 30, height: 30 }}
-                    source={require('../assets/image/board/caisse.png')}/>)
-                }
-                {item === '#' && (
-                  <Image
-                  style={{ width: 30, height: 30 }}
-                    source={require('../assets/image/board/mur.png')}/>)
-                }
-                {item === '.' && (
-                  <Image
-                  style={{ width: 30, height: 30 }}
-                    source={require('../assets/image/board/sol.png')}/>)
-                }
-                {item === 'x' && (
-                  <Image
-                  style={{ width: 30, height: 30 }}
-                    source={require('../assets/image/board/croix.jpg')}/>)
-                }
-                {item === 'P' && (
-                  <Image
-                  style={{ width: 30, height: 30 }}
-                    source={require('../assets/image/board/personnage.jpg')}/>)
-                }
-                  
-              </View>
-            )}
-            //Setting the number of column
-            numColumns={props.route.params.nbCol}
-            keyExtractor={(item, index) => index.toString()}
-          />)
-        })}
-         </View>
-        }
-  
-        
+    const imageWidth = Dimensions.get('window').width / props.route.params.nbCol;
+    const imageHeight = imageWidth;
 
-            {completed == false && 
+    return (
+      <SafeAreaView style={styles.container}>
+       {board != null &&
+        <View>
+        {boardEachTurn != null && <Text>Nombre de tour : {boardEachTurn.length}</Text>}
+          {board.map((row, index) => {
+            return (
+              <FlatList
+                key={row.toString + index}
+                data={row}
+                renderItem={({item}) => (
+                  <View>
+                      {item === 'C' && (
+                        <Image
+                        style={{ ...styles.image, width: imageWidth, height: imageHeight }}
+                        source={require('../assets/image/board/caisse.png')}/>)
+                      }
+                      {item === '#' && (
+                        <Image
+                        style={{ ...styles.image, width: imageWidth, height: imageHeight }}
+                          source={require('../assets/image/board/mur.png')}/>)
+                      }
+                      {item === '.' && (
+                        <Image
+                        style={{ ...styles.image, width: imageWidth, height: imageHeight }}
+                          source={require('../assets/image/board/sol.png')}/>)
+                      }
+                      {item === 'x' && (
+                        <Image
+                        style={{ ...styles.image, width: imageWidth, height: imageHeight }}
+                          source={require('../assets/image/board/croix.jpg')}/>)
+                      }
+                      {item === 'P' && (
+                        <Image
+                        style={{ ...styles.image, width: imageWidth, height: imageHeight }}
+                          source={require('../assets/image/board/personnage.jpg')}/>)
+                      }
+                  
+                  </View>
+                )}
+                //Setting the number of column
+                numColumns={props.route.params.nbCol}
+                keyExtractor={(item, index) => index.toString()}
+              />)
+            })}
+          </View>
+        }
+
+
+        
+        {completed == false && 
                 <>
-                <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
             <View style={{ width: buttonSize, height: buttonSize }}>
               <Button
                 onPress={() => move("TOP")}
-                title="TOP"
+                title="HAUT"
                 color="#841584"
                 accessibilityLabel="Learn more about this purple button"
               />
           </View>
-        </View>
   
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ width: buttonSize, height: buttonSize }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', height:0 }}>
+          <View style={{ width: buttonSize, height: buttonSize, marginRight: 5 }}>
             <Button
               onPress={() => move("LEFT")}
-              title="LEFT"
+              title="GAUCHE"
               color="#841584"
               accessibilityLabel="Learn more about this purple button"
             />
@@ -261,28 +256,26 @@ export default function Board(props) {
           <View style={{ width: buttonSize, height: buttonSize }}>
             <Button
               onPress={() => move("RIGHT")}
-              title="RIGHT"
+              title="DROITE"
               color="#841584"
               accessibilityLabel="Learn more about this purple button"
             />
           </View>
         </View>
   
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
           <View style={{ width: buttonSize, height: buttonSize }}>
             <Button
               onPress={() => move("BOTTOM")}
-              title="BOTTOM"
+              title="BAS"
               color="#841584"
               accessibilityLabel="Learn more about this purple button"
             />
           </View>
-        </View>
       </View>
   
         <Button
           onPress={() => precedentTurn()}
-          title="Retour"
+          title="COUP PRECEDENT"
           color="#841584"
           accessibilityLabel="Learn more about this purple button"
         />
@@ -292,9 +285,7 @@ export default function Board(props) {
             {completed == true &&
                 <Text style={styles.completed}>REUSSI ! :D</Text>
             }
-
-            
-        </View>
+      </SafeAreaView>
     );
 }
 
@@ -307,6 +298,13 @@ const styles = StyleSheet.create({
         // color: 'blue',
         fontWeight: 'bold',
         fontSize: 30,
-    }
-  }
-  );
+    },
+    container: {
+      flex: 1,
+      backgroundColor: 'white',
+    },
+    image: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+});
