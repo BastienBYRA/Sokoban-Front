@@ -41,6 +41,7 @@ const Admin = () => {
     return (
         <View>
             <Text>créer un niveau</Text>
+
             <SafeAreaView>
                 <TextInput
                     style={styles.input}
@@ -86,9 +87,9 @@ const Admin = () => {
 const styles = StyleSheet.create({
     input: {
         height: 40,
-        margin: 12,
-        borderWidth: 1,
-        padding: 10,
+       /* margin: 12,*/
+        /*borderWidth: 1,*/
+        /*padding: 10,*/
     },
 });
 
