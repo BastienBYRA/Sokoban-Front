@@ -12,7 +12,6 @@ export default function Home({navigation}) {
     }, []);
 
     const getAllBoards = async () => {
-        //METTRE SON IP
         fetch(url + "/board")
             .then((response) => response.json())
             .then((data) => {
