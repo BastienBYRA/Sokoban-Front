@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, Text, View, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 
@@ -36,10 +36,7 @@ export default function Home({navigation}) {
                         <View
                             style={{
                                 flex: 1,
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                margin: 1
+                                flexDirection: 'column'
                             }}>
                             <TouchableOpacity
                                 onPress={() => navigation.navigate('Board', {
@@ -48,8 +45,9 @@ export default function Home({navigation}) {
                                     nbRow: item.nbRow,
                                     url: url
                                 })}
+                                style={ styles.touchableOpacity }
                             >
-                                <Text>
+                                <Text style={{textAlign: 'center'}}>
                                     {item.name}
                                 </Text>
                             </TouchableOpacity>
@@ -64,3 +62,12 @@ export default function Home({navigation}) {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    touchableOpacity: {
+        paddingVertical: 10, 
+        margin: 5, 
+        borderRadius: 5, 
+        backgroundColor: 'lightgreen'
+    }
+});
