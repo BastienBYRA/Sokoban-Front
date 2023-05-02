@@ -212,12 +212,12 @@ export default function Board(props) {
                       {item === 'x' && (
                         <Image
                         style={{ ...styles.image, width: imageWidth, height: imageHeight }}
-                          source={require('../assets/image/board/croix.jpg')}/>)
+                          source={require('../assets/image/board/destination.png')}/>)
                       }
                       {item === 'P' && (
                         <Image
                         style={{ ...styles.image, width: imageWidth, height: imageHeight }}
-                          source={require('../assets/image/board/personnage.jpg')}/>)
+                          source={require('../assets/image/board/personnage.png')}/>)
                       }
                   
                   </View>
